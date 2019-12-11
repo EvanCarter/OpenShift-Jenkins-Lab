@@ -38,7 +38,7 @@ pipeline {
                     openshift.withCluster(){
                     openshift.withProject(devProject) {
                         skopeoToken = openshift.raw("sa get-token jenkins").out.trim()
-                    }
+                    }}
                     imageTag = getVersionFromPom()
                 }
             }
@@ -52,6 +52,7 @@ pipeline {
         stage("Create Image") {
             steps {
                 script {
+                    openshift.withCluster(){
                     openshift.withProject(devProject) {
                         dir("openshift") {
                             /* TODO: Process and Apply the build.yaml OpenShift template. 
@@ -64,7 +65,7 @@ pipeline {
                         }
                         dir("target") {
                             openshift.selector("bc", appName).startBuild("--from-file=${appName}-${imageTag}.jar").logs("-f")
-                        }
+                        }}
                     }
                 }
             }
@@ -123,6 +124,6 @@ pipeline {
                     deployApplication(appName, imageTag, prodProject, replicas)
                 }
             }
-        }}
+        }
     }
 }
