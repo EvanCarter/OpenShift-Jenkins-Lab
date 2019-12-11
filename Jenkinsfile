@@ -41,7 +41,6 @@ pipeline {
                     }
                     imageTag = getVersionFromPom()
                 }
-    }
             }
         }
         stage("Build & Test") {
@@ -124,6 +123,6 @@ pipeline {
                     deployApplication(appName, imageTag, prodProject, replicas)
                 }
             }
-        }
+        }}
     }
 }
